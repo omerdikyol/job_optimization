@@ -1,0 +1,9 @@
+Öncelikle bir arayüz olacak. Birkaç sayfadan oluşan. Kullanıcıya verileri sunabilecek bir ekran olmalı. 
+Excelden bu verileri çekip o ekrana getirmeli. Örnek excelde makine iş setup bakimlar yer alıyor. O çekilecek. 
+Sonrasında Word olarak iletmiştim o kısıtlar altında algoritmalar kodlanacak. 
+Özellikle tavlama benzetiminde başlangıç sıcaklığı iterasyon soğutma katsayısı ve komsuluk kullanıcı girişli olsun. 
+Genetik algoritmada ise çaprazlama olasılığı popuslasyon büyüklüğü ve iterasyon sayısı kullaci girişli olmalıdır. 
+İkisinin de amacı bu üretim probleminde tamamlanma zamanini bulmak olacak ve en küçüklemeye çalışacak. 
+Sonuçlarda makine ve işleri nasıl atamış bunun sürelerini görmeli başlangıç bitiş zamanı olarak ve bakimlar nerelere gelmiş onu gösterecek kullanıcı bunu görmeli
+
+Algoritmalar rastgele makineye işler atanmış olarak sırada başlayabilir
