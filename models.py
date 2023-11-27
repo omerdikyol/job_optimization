@@ -177,14 +177,25 @@ class Timeline:
         # job_times listesindeki bitiş zamanını güncelle
         self.job_times[operation.index][1] = machine.getCurrentTime()
     
-    def add_maintenance(self, machine, maintenance):
+    def add_maintenance(self, machine, maintenance, kestirimciMaintenance=None):
+        # Bakımın süresini tanımla
+        maintenanceDuration = maintenance.duration*60
         # Eğer makine henüz sözlükte yoksa, değer olarak boş bir liste ekleyin
         if maintenance.machine not in self.machines:
             self.machines[maintenance.machine] = []
         # Makine listesine bakımı ekle
         self.machines[maintenance.machine].append(maintenance)
+        # Aynı makinenin kestirimci bakımı varsa, onu da ekleyin
+        if kestirimciMaintenance is not None:
+            self.machines[maintenance.machine].append(kestirimciMaintenance)
+            # Eğer kestirimci bakım daha uzun sürüyorsa, onun zamanını esas al
+            if kestirimciMaintenance.duration*60 > maintenanceDuration:
+                maintenanceDuration = kestirimciMaintenance.duration*60
+
+            kestirimciMaintenance.isDone = True
+
         maintenance.isDone = True
-        machine.setCurrentTime(self.currentTime + maintenance.duration*60)
+        machine.setCurrentTime(self.currentTime + maintenanceDuration)
         self.calculateCurrentTime(machine)
 
     def calculateTotalTime(self):

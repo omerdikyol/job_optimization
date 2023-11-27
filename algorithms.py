@@ -72,10 +72,18 @@ class SimulatedAnnealing:
                 machine = random.choice(free_machines)
                 # Makinenin bakımı var mı diye kontrol et
                 maintenance = checkMaintenance(machine, operation)
+                predictiveMaintenance = None
                 if (maintenance != False and not maintenance.isDone):
+                    # Eğer bakım tipi 'planlı' ise, makinenin kestirimci bakımı var mı diye kontrol et
+                    if maintenance.type == "Planlı Bakım":
+                        # Makinenin kestirimci bakımı varsa, bakımı yap
+                        checkPredictive = [maintenance for maintenance in self.maintenances if maintenance.machine == machine.index and maintenance.type == "Kestirimci Bakım"]
+                        if len(checkPredictive) > 0:
+                            predictiveMaintenance = maintenance
+
                     # Eğer bakım zamanı daha yakınsa, bakımı yap
-                    self.timeline.add_maintenance(machine, maintenance)
-                    maintenance.isDone = True
+                    self.timeline.add_maintenance(machine, maintenance, predictiveMaintenance)
+
                     if not operation.checkFinished():
                         return startOperation(operation)
                 
@@ -297,7 +305,7 @@ class GeneticAlgorithm:
                 if currentIndex != 0:
                     previousJob = job_assignment[currentIndex - 1]
                     previousOperation = [op for op in self.operations if op.index == previousJob][-1]
-
+        
             # Eğer önceki operasyon bitmemişse, önce onu bitir
             if previousOperation is not None and not previousOperation.checkFinished():
                 if not startOperation(previousOperation):
@@ -318,10 +326,18 @@ class GeneticAlgorithm:
                 machine = random.choice(free_machines)
                 # Makinenin bakımı var mı diye kontrol et
                 maintenance = checkMaintenance(machine, operation)
+                predictiveMaintenance = None
                 if (maintenance != False and not maintenance.isDone):
+                    # Eğer bakım tipi 'planlı' ise, makinenin kestirimci bakımı var mı diye kontrol et
+                    if maintenance.type == "Planlı Bakım":
+                        # Makinenin kestirimci bakımı varsa, bakımı yap
+                        checkPredictive = [maintenance for maintenance in self.maintenances if maintenance.machine == machine.index and maintenance.type == "Kestirimci Bakım"]
+                        if len(checkPredictive) > 0:
+                            predictiveMaintenance = maintenance
+
                     # Eğer bakım zamanı daha yakınsa, bakımı yap
-                    self.timeline.add_maintenance(machine, maintenance)
-                    maintenance.isDone = True
+                    self.timeline.add_maintenance(machine, maintenance, predictiveMaintenance)
+
                     if not operation.checkFinished():
                         return startOperation(operation)
                 
