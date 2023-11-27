@@ -216,13 +216,16 @@ class MainWindow(QMainWindow):
         # Sonucu ekle
         self.result_textedit.append("Tavlama benzetimi algoritması:")
         machineLen = len(self.machines)
-        self.result_textedit.append("Makineler: " + str(solution[:machineLen].sort()))
+        self.result_textedit.append("Makineler: " + str(sorted(solution[:machineLen])))
         self.result_textedit.append("İş Sırası: " + str(solution[machineLen:]))
 
         # Toplam süreyi hesapla
         total_time = solTimeline.calculateTotalTime()
         # Toplam süreyi saat, dakika ve saniyeye çevir
         total_time = self.print_time(int(total_time), True)
+
+        # Toplam süreyi görüntüle
+        self.result_textedit.append("\nToplam süre: " + total_time)
 
         # İşlerin başlangıç zamanı, bitiş zamanı ve tamamlanma süresini görüntüle
         self.result_textedit.append("\nİşlerin başlangıç zamanı, bitiş zamanı ve tamamlanma süresi:")
@@ -236,13 +239,6 @@ class MainWindow(QMainWindow):
             for key2, val2 in solTimeline.operation_times.items():
                 if str(key2.split('-')[0]) == str(key):
                     self.result_textedit.append(f"  Op. {key2.replace('-','')}: {self.print_time(val2[0])} - {self.print_time(val2[1])}, Süre: {self.print_time(int(val2[1]) - int(val2[0]), show_unit=True)}, Makine: {val2[2]}")
-
-        # Sonucu ekle
-        self.result_textedit.append("Toplam süre: " + total_time + "\n")
-
-        # Print maintenance 
-        for maintenances in self.maintenances:
-            self.result_textedit.append("Bakım: " + str(maintenances))
 
         # Mesajı gizle
         progress.close()
