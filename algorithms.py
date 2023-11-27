@@ -138,9 +138,16 @@ class SimulatedAnnealing:
     # Başlangıç çözümünü tanımla
     # Bu fonksiyon, rastgele bir çözüm oluşturur
     def initial_solution(self):
+        # Makine ve iş sayısını al
+        machine_count = len(self.machines)
+        job_count = 0
+        for operation in self.operations:
+            if operation.index > job_count:
+                job_count = operation.index
+
         # Makine ve iş atamalarını rastgele oluştur
-        machine_assignment = list(range(1,7))
-        job_assignment = list(range(1,11))
+        machine_assignment = list(range(1,machine_count+1))
+        job_assignment = list(range(1,job_count+1))
         random.shuffle(machine_assignment)
         random.shuffle(job_assignment)
         # Çözümü bir liste olarak döndür
@@ -149,8 +156,12 @@ class SimulatedAnnealing:
     # Komşu çözümü tanımla
     # Bu fonksiyon, bir çözümün komşusunu oluşturur
     def neighbor_solution(self, solution):
-        # Makine sayısını al
+        # Makine ve iş sayısını al
         machine_count = len(self.machines)
+        job_count = 0
+        for operation in self.operations:
+            if operation.index > job_count:
+                job_count = operation.index
 
         # Çözümü makine ve iş atamaları olarak ayır
         machine_assignment = solution[:machine_count]
@@ -159,13 +170,13 @@ class SimulatedAnnealing:
         choice = random.randint(0, 1)
         if choice == 0: # Makine atamasını seçtiyse
             # Makine atamasının iki elemanını rastgele değiştir
-            i = random.randint(0, 5)
-            j = random.randint(0, 5)
+            i = random.randint(0, machine_count-1)
+            j = random.randint(0, machine_count-1)
             machine_assignment[i], machine_assignment[j] = machine_assignment[j], machine_assignment[i]
         else: # İş atamasını seçtiyse
             # İş atamasının iki elemanını rastgele değiştir
-            i = random.randint(0, 9)
-            j = random.randint(0, 9)
+            i = random.randint(0, job_count-1)
+            j = random.randint(0, job_count-1)
             job_assignment[i], job_assignment[j] = job_assignment[j], job_assignment[i]
         # Yeni çözümü bir liste olarak döndür
         return machine_assignment + job_assignment
@@ -444,14 +455,19 @@ class GeneticAlgorithm:
         if r < self.crossover_rate:
             # Makine atamalarını çaprazla
             # Bir kesme noktası seç
-            cut = random.randint(1, 5)
+            cut = random.randint(1, machine_count-1)
             # İlk yarımı birinci ebeveynden, ikinci yarımı ikinci ebeveynden al
             machine_assignment = machine_assignment1[:cut] + machine_assignment2[cut:]
             machine_assignment = self.fix_duplicates(machine_assignment, machine_assignment1, machine_assignment2)
 
             # İş atamalarını çaprazla
             # Bir kesme noktası seç
-            cut = random.randint(1, 9)
+            # İş sayısını al
+            job_count = 0
+            for operation in self.operations:
+                if operation.index > job_count:
+                    job_count = operation.index
+            cut = random.randint(1, job_count-1)
             # İlk yarımı birinci ebeveynden, ikinci yarımı ikinci ebeveynden al
             job_assignment = job_assignment1[:cut] + job_assignment2[cut:]
             # Tekrarlanan iş varsa, onları diğer ebeveynden al
@@ -470,6 +486,12 @@ class GeneticAlgorithm:
         # Makine sayısını al
         machine_count = len(self.machines)
 
+        # İş sayısını al
+        job_count = 0
+        for operation in self.operations:
+            if operation.index > job_count:
+                job_count = operation.index
+
         # Çözümü makine ve iş atamaları olarak ayır
         machine_assignment = solution[:machine_count]
         job_assignment = solution[machine_count:]
@@ -483,11 +505,11 @@ class GeneticAlgorithm:
             choice = random.randint(0, 1)
             if choice == 0:  # Eğer makine ataması seçildiyse
                 # Rasgele iki elemanı birbirleriyle değiştir
-                i, j = random.sample(range(6), 2)
+                i, j = random.sample(range(machine_count), 2)
                 machine_assignment[i], machine_assignment[j] = machine_assignment[j], machine_assignment[i]
             else:  # Eğer iş ataması seçildiyse
                 # Rasgele iki elemanı birbirleriyle değiştir
-                i, j = random.sample(range(10), 2)
+                i, j = random.sample(range(job_count), 2)
                 job_assignment[i], job_assignment[j] = job_assignment[j], job_assignment[i]
 
         # Yeni çözümü bir liste olarak döndür

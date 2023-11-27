@@ -216,7 +216,7 @@ class MainWindow(QMainWindow):
         # Sonucu ekle
         self.result_textedit.append("Tavlama benzetimi algoritması:")
         machineLen = len(self.machines)
-        self.result_textedit.append("Makine Sırası: " + str(solution[:machineLen]))
+        self.result_textedit.append("Makineler: " + str(solution[:machineLen].sort()))
         self.result_textedit.append("İş Sırası: " + str(solution[machineLen:]))
 
         # Toplam süreyi hesapla
@@ -239,6 +239,10 @@ class MainWindow(QMainWindow):
 
         # Sonucu ekle
         self.result_textedit.append("Toplam süre: " + total_time + "\n")
+
+        # Print maintenance 
+        for maintenances in self.maintenances:
+            self.result_textedit.append("Bakım: " + str(maintenances))
 
         # Mesajı gizle
         progress.close()
